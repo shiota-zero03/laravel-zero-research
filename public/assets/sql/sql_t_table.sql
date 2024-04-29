@@ -22,14 +22,14 @@ DROP TABLE IF EXISTS `t_value`;
 CREATE TABLE `t_value`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `item` bigint NULL DEFAULT NULL,
-  `t0_1` varchar(255) CHARACTER NULL DEFAULT NULL,
-  `t0_05` varchar(255) CHARACTER NULL DEFAULT NULL,
-  `t0_02` varchar(255) CHARACTER NULL DEFAULT NULL,
-  `t0_01` varchar(255) CHARACTER NULL DEFAULT NULL,
-  `t0_002` varchar(255) CHARACTER NULL DEFAULT NULL,
-  `t0_001` varchar(255) CHARACTER NULL DEFAULT NULL,
+  `t0_1` varchar(255) NULL DEFAULT NULL,
+  `t0_05` varchar(255) NULL DEFAULT NULL,
+  `t0_02` varchar(255) NULL DEFAULT NULL,
+  `t0_01` varchar(255) NULL DEFAULT NULL,
+  `t0_002` varchar(255) NULL DEFAULT NULL,
+  `t0_001` varchar(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 310 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 310 ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_value
