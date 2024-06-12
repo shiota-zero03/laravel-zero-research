@@ -4,17 +4,14 @@ namespace App\Http\Controllers\User\ValidityReliability;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use App\Repositories\ValidityReliabilityRepository;
 use App\Repositories\TicketDataRepository;
 use App\Repositories\ItemGroupRepository;
 use App\Repositories\ItemValidationRepository;
 use App\Repositories\RValueRepository;
 
-use App\Imports\ValidityReliabilityImport;
-use Excel;
-use DataTables, DB, File, Storage;
-
-class DataController extends Controller
+class ResultController extends Controller
 {
     public function __construct()
     {
@@ -26,10 +23,9 @@ class DataController extends Controller
     }
     public function index()
     {
-        try {
+        try{
             $ticket = $this->ticket->getByUserId(auth()->user()->id, 'validity-reliability');
             $get_validity = \App\Models\MenuAccess::where('menu_name','VALIDITY AND RELIABILITY')->first();
-
             $group = $this->groupRepo->getByUserId(auth()->user()->id, 'validation');
             $item_data = $this->itemRepo->getByTicketId($group ? $group->id : 0);
 
@@ -92,7 +88,7 @@ class DataController extends Controller
 
                         $sigmaXR[] = $xrPerItem;
                     }
-                    $datavr = [
+                    $data = [
                         'n' => count($yIndex),
                         'r_table' => $this->r->getByItem(count($yIndex))->r_005,
                         'sigma_x' => $sigmaX,
@@ -106,59 +102,13 @@ class DataController extends Controller
                         'sigma_xr' => $sigmaXR
                     ];
                 } else {
-                    $datavr = null;
+                    $data = null;
                 }
             } else {
-                $datavr = null;
+                $data = null;
             }
 
-            return view('pages.research.validity-reliability.index', compact(['ticket', 'get_validity', 'item_data', 'dataByTicket', 'dataByItem', 'datavr']));
-        } catch (\Throwable $th) {
-            return response()->json(['message' => 'Server error : '.$th->getMessage()], 500);
-        }
-    }
-    public function create(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-
-            $ticketData = [
-                'ticket_number' => $this->ticket->getTicketNumber(),
-                'user_id' => auth()->user()->id,
-                'type' => 'validity-reliability',
-            ];
-            $createTicket = $this->ticket->create($ticketData);
-            $group = $this->groupRepo->getByUserId(auth()->user()->id, 'validation');
-            $item_data = $this->itemRepo->getByTicketId($group ? $group->id : 0);
-
-            $excel = $request->excel_file;
-            if($item_data->count() > 0){
-                $import = Excel::import(new ValidityReliabilityImport($createTicket->id, $item_data), $excel);
-            } else {
-                return redirect()->route('user.validity-and-reliability-item.index')->with('error_data', 'Please insert the item of questionnaire first');
-            }
-
-            DB::commit();
-            if($import) {
-                return back()->with('success_data', 'Data create successfully');
-            }
-
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return back()->with('error_data', $th->getMessage());
-        }
-    }
-    public function delete(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-
-            $delete = $this->ticket->deleteByUserId(auth()->user()->id, 'validity-reliability');
-
-            DB::commit();
-            if($delete){
-                return back()->with('success_data', 'Data delete successfully');
-            }
+            return view('pages.research.validity-reliability.result', compact(['data']));
         } catch (\Throwable $th) {
             return response()->json(['message' => 'Server error : '.$th->getMessage()], 500);
         }

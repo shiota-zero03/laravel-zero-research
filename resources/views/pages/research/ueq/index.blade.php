@@ -23,7 +23,7 @@
                         </div>
                     </div>
                 @endif
-                <div class="mt-3 text-white">
+                <div class="mt-3 text-white table-responsive">
                     <table class="text-white table table-bordered table-hovered border" id="datatable">
                         <thead>
                             <tr>

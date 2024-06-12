@@ -41,10 +41,10 @@
             <div class="text-center">
                 <button type="submit" class="btn btn-inverse-primary btn-sm w-100 py-2">Sign In</button>
             </div>
-            <hr>
+            {{-- <hr>
             <div class="">
                 <a target="__blank" href="{{ route('oauth.login', 'google') }}" class="w-100 mb-2 btn btn-outline-danger d-flex align-items-center justify-content-center"><i class="mdi mdi-google"></i> Sign In with Google</a>
-            </div>
+            </div> --}}
             <p class="sign-up">Don't have an Account ?<a href="{{ route('register') }}"> Sign Up</a></p>
         </form>
     </div>

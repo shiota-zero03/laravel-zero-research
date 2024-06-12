@@ -135,8 +135,8 @@
                         <ul class="nav flex-column sub-menu">
                             <li class="nav-item"> <a class="nav-link" href="{{ route('user.validity-and-reliability-item.index') }}">Insert Item</a></li>
                             <li class="nav-item"> <a class="nav-link" href="{{ route('user.validandreliable.data.index') }}">Questionnaire Data</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Validity Test</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Reliability Test</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="{{ route('user.validandreliable.result.index') }}">Result</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="{{ route('user.validandreliable.documentation.index') }}">Documentation</a></li>
                         </ul>
                     </div>
                 </li>
@@ -153,7 +153,7 @@
         </li>
 
         @if(auth()->user()->role == 1)
-            <li class="nav-item menu-items">
+            <li class="nav-item menu-items d-none">
                 <a class="nav-link" href="{{ route('admin.setting.index') }}">
                     <span class="menu-icon">
                         <i class="mdi mdi-settings"></i>

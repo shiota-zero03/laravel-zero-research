@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Resources\Rules\AuthRules;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Mail;
 
 use App\Models\User;
+use App\Mail\AuthSendMail;
 use Hash, Auth;
 
 class AuthController extends Controller
@@ -57,7 +59,7 @@ class AuthController extends Controller
             \DB::beginTransaction();
 
             $create = User::create($data);
-            event(new Registered($create));
+            Mail::to($request->email)->send(new AuthSendMail($create, 'Activation'));
 
             \DB::commit();
             return redirect()->route('login')->with('success_data', 'Data register successfully, please check your email to activated this account');
@@ -71,11 +73,39 @@ class AuthController extends Controller
     public function verification_email(Request $request, $id, $hash)
     {
         $user = User::findOrFail($id);
-        if ($user && hash_equals($hash, sha1($user->email))) {
+        $hashData = base64_decode($hash);
+        if(Hash::check($user->email, $hashData)){
             $user->markEmailAsVerified();
             return redirect()->route('login')->with('success_data', 'Your account has been activated');
         }
         abort(500);
+    }
+    public function forgot_password(Request $request)
+    {
+        $validation = $request->validate([
+            'email' => 'required|email',
+        ]);
+        $user = User::where('email', $request->email)->first();
+        if(!$user) return back()->with('error_data', 'Email not found');
+        Mail::to($request->email)->send(new AuthSendMail($user, 'Reset'));
+        return redirect()->route('login')->with('success_data', 'Please check your email to reset your password');
+    }
+    public function reset_password(Request $request, $id, $hash)
+    {
+        $user = User::findOrFail($id);
+        $hashData = base64_decode($hash);
+        if(Hash::check($user->email, $hashData)){
+            return view('pages.auth.reset-password');
+        }
+        abort(500);
+    }
+    public function reset_password_submit(Request $request, $id)
+    {
+        $this->rules->__resetPasswordRules($request);
+        $update = User::find($id)->update(['password', Hash::make($request->password)]);
+        if($update){
+            return redirect()->route('login')->with('success_data', 'Your password has been updated');
+        }
     }
     public function logout(Request $request)
     {

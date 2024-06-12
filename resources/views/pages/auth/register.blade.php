@@ -54,10 +54,10 @@
             <div class="text-center">
                 <button type="submit" class="btn btn-inverse-primary btn-sm w-100 py-2">Sign Up</button>
             </div>
-            <hr>
+            {{-- <hr>
             <div class="">
                 <a href="{{ route('oauth.register', 'google') }}" class="w-100 mb-2 btn btn-outline-danger d-flex align-items-center justify-content-center"><i class="mdi mdi-google"></i> Sign Up with Google</a>
-            </div>
+            </div> --}}
             <p class="sign-up text-center">Already have an Account?<a href="{{ route('login') }}"> Sign In</a></p>
             <p class="terms">By creating an account you are accepting our<a href="#"> Terms & Conditions</a></p>
         </form>

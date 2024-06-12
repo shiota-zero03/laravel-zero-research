@@ -23,4 +23,11 @@ class AuthRules
             'password_confirmation' => 'required|string',
         ]);
     }
+    public function __resetPasswordRules(Request $request)
+    {
+        return $request->validate([
+            'password' => 'required|string|confirmed',
+            'password_confirmation' => 'required|string',
+        ]);
+    }
 }

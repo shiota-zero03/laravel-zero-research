@@ -16,7 +16,10 @@ Auth::routes();
 Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
-    return view('welcome');
+    $user = \App\Models\User::find(1);
+    $type = 'Reset';
+    return view('pages.emails.auth-mail', compact(['user', 'type']));
+    return redirect()->route('login');
 });
 Route::controller(\App\Http\Controllers\AuthController::class)->group(function(){
     Route::get('/login', function(){ return view('pages.auth.login'); })->name('login');
@@ -26,6 +29,9 @@ Route::controller(\App\Http\Controllers\AuthController::class)->group(function()
     Route::get('/email/verify', function () { return view('pages.auth.email-verification'); })->middleware('auth')->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', 'verification_email')->name('verification.verify');
     Route::get('/forgot-password', function(){ return view('pages.auth.forgot-password'); })->name('forgot-password');
+    Route::post('/forgot-password', 'forgot_password')->name('forgot-password-post');
+    Route::get('/reset-password/{id}/{hash}', 'reset_password')->name('reset.password');
+    Route::post('/reset-password/{id}/{hash}', 'reset_password_submit')->name('reset.password.post');
 });
 
 Route::controller(\App\Http\Controllers\AuthSSOController::class)->prefix('/oauth')->name('oauth.')->group(function(){
@@ -110,6 +116,7 @@ Route::middleware(['auth', 'verified'])->group(function(){
             });
         });
 
+        // clear
         Route::resource('/validity-and-reliability-item', \App\Http\Controllers\User\ValidityReliability\ItemController::class);
         Route::name('validandreliable.')->group(function(){
             Route::prefix('/validity-and-reliability-data')->group(function(){
@@ -118,6 +125,16 @@ Route::middleware(['auth', 'verified'])->group(function(){
                     Route::post('/', 'create')->name('create');
                     Route::get('/json', 'json')->name('json');
                     Route::get('/delete', 'delete')->name('delete');
+                });
+            });
+            Route::prefix('/validity-and-reliability-result')->group(function(){
+                Route::controller(\App\Http\Controllers\User\ValidityReliability\ResultController::class)->name('result.')->group(function(){
+                    Route::get('/', 'index')->name('index');
+                });
+            });
+            Route::prefix('/validity-and-reliability-documentation')->group(function(){
+                Route::controller(\App\Http\Controllers\User\ValidityReliability\DocumentationController::class)->name('documentation.')->group(function(){
+                    Route::get('/', 'index')->name('index');
                 });
             });
         });
