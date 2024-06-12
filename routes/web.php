@@ -16,9 +16,6 @@ Auth::routes();
 Auth::routes(['verify' => true]);
 
 Route::get('/', function () {
-    $user = \App\Models\User::find(1);
-    $type = 'Reset';
-    return view('pages.emails.auth-mail', compact(['user', 'type']));
     return redirect()->route('login');
 });
 Route::controller(\App\Http\Controllers\AuthController::class)->group(function(){
